@@ -1,0 +1,23 @@
+{{ define "main" }}
+    <div id="my-hero-header" class="hero-section">
+        <div class="hero-content">
+            <h1>{{ .Site.Title }}</h1>
+            <p class="motto">输入你的座右铭</p>
+        </div>
+    </div>
+
+    <section class="article-list">
+        {{- $paginator := partial "helper/paginator.html" . -}}
+        {{ range $paginator.Pages }}
+            {{ partial "article-list/default" . }}
+        {{ end }}
+    </section>
+
+    {{- partial "pagination.html" . -}}
+    {{- partial "footer/footer" . -}}
+{{ end }}
+
+{{/* 强行显式调用侧边栏渲染 */}}
+{{ define "right-sidebar" }}
+    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+{{ end }}

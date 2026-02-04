@@ -1,0 +1,17 @@
+<script>
+    // 延迟 500ms 加载不蒜子
+    setTimeout(function() 
+    {
+        var bsz = document.createElement('script');
+        bsz.src = "//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
+        document.head.appendChild(bsz);
+    }, 500);
+
+    // 延迟 1000ms 加载樱花
+    setTimeout(function() 
+    {
+        var sakura = document.createElement('script');
+        sakura.src = "{{ (resources.Get "background/sakura.js").Permalink }}";
+        document.body.appendChild(sakura);
+    }, 1000);
+</script>

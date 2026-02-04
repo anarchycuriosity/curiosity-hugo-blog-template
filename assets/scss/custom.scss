@@ -1,0 +1,99 @@
+/* --- 1. 全局与 Hero 高度变量 --- */
+:root {
+    --hero-height: 40vh; /* 只要修改这里，Hero区和正文位移会同步变动 */
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* 隐藏深色模式切换开关 */
+/*
+.theme-switch, #dark-mode-toggle {
+    display: none !important;
+}
+*/
+
+/* --- 2. Hero 区域样式 --- */
+.hero-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--hero-height);
+    background-image: url('/img/hero.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+
+    .hero-content {
+        text-align: center;
+        h1, .motto {
+            color: #000000 !important;
+            font-weight: bold !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
+                         0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        h1 { 
+            font-size: 3rem; 
+            margin: 0; 
+        }
+        .motto { 
+            font-size: 1.2rem; 
+            margin-top: 1rem; 
+        }
+    }
+}
+
+/* --- 3. 布局修正（核心补丁） --- */
+
+/* 修复主容器：确保它是 Flex 布局，侧边栏才能并排 */
+.main-container {
+    padding-top: var(--hero-height) !important;
+    position: relative;
+    z-index: 2;
+    display: flex !important;
+    flex-direction: row !important; /* 强制横向排列 */
+    justify-content: center;
+    gap: var(--section-gap);
+    background: transparent !important;
+}
+
+/* 修复容器宽度：Stack 依赖这个宽度来计算侧边栏空间 */
+.container {
+    max-width: var(--container-max-width) !important; 
+    margin: 0 auto;
+}
+
+/* 强制侧边栏显现补丁 */
+.sidebar.right {
+    display: flex !important; /* 很多时候消失是因为变成了 display: none */
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 10;
+}
+
+/* 确保内容块有背景，遮住下方的 Hero 图 */
+/* 同时给文章列表加一点圆角，符合 Stack 的设计语言 */
+.article-list, .sidebar, .main {
+    background: var(--card-background) !important; 
+    border-radius: var(--card-border-radius);
+}
+
+/* 针对移动端的自动适配：手机上 Hero 变窄一点，且不强制 Flex 布局 */
+@media (max-width: 768px) {
+    :root {
+        --hero-height: 30vh; 
+    }
+    .main-container {
+        flex-direction: column !important; /* 手机上改回单栏 */
+    }
+    .hero-section .hero-content h1 {
+        font-size: 2rem;
+    }
+}
+

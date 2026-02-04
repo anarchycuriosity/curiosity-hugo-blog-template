@@ -1,0 +1,40 @@
+{{ define "body-class" }}template-archives{{ end }}
+{{ define "main" }}
+    <header>
+        {{/* 保留 Categories 分类显示逻辑 */}}
+        {{- $taxonomy := $.Site.GetPage "taxonomyTerm" "categories" -}}
+        {{- $terms := $taxonomy.Pages -}}
+        {{ if $terms }}
+        <h2 class="section-title">{{ T "widget.categoriesCloud.title" }}</h2>
+        <div class="subsection-list">
+            <div class="article-list--tile">
+                {{ range $terms }}
+                    {{ partial "article-list/tile" (dict "context" . "size" "250x150" "Type" "taxonomy") }}
+                {{ end }}
+            </div>
+        </div>
+        {{ end }}
+    </header>
+
+    {{/* 获取文章列表并过滤 */}}
+    {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+    {{ $filtered := where $pages "Params.hidden" "!=" true }}
+
+    {{/* 核心修改：将 "2006" 改为 "2006-01" 实现按月划分 */}}
+    {{ range $filtered.GroupByDate "2006-01" }}
+    {{ $id := lower (replace .Key " " "-") }}
+    <div class="archives-group" id="{{ $id }}">
+        {{/* 这里的 .Key 会显示为 "2026-02" 这种格式 */}}
+        <h2 class="archives-date section-title">
+            <a href="{{ $.RelPermalink }}#{{ $id }}">{{ .Key }}</a>
+        </h2>
+        <div class="article-list--compact">
+            {{ range .Pages }}
+                {{ partial "article-list/compact" . }}
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
+
+    {{ partialCached "footer/footer" . }}
+{{ end }}
